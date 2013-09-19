@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	
+	<meta charset="utf-8" />
+
+	<style>
+
+		* { border: 0; margin: 0; padding: 0 }
+
+		div {
+			height: 300px;
+			margin: auto;
+			width: 300px;
+			position: absolute;
+				bottom: 0;
+				top: 0;
+		}
+
+		#div1 {
+			background: orange;
+			left: 0;
+			right: 50%;
+		}
+
+		#div2 {
+			background: blue;
+			left: 50%;
+			right: 0;
+			-webkit-transform: translate(100px, 100px) rotate(45deg) skew(.5rad, 25deg) scale(.1, .1);
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="div1"></div>
+	<div id="div2"></div>
+	
+	<script src="../node_modules/annie/annie.js"></script>
+	<script src="../node_modules/matrix-utilities/matrix-utilities.js"></script>
+	<script src="../node_modules/transform-to-matrix/transform-to-matrix.js"></script>
+	<script src="../node_modules/umodel/umodel.js"></script>
+	<script src="../dist/css-to-matrix.js"></script>
+	<script>
+
+	const CssToMatrix = window['css-to-matrix']
+
+	var t = new CssToMatrix()
+		.translate(100, 100)
+		.rotate('45deg')
+		.skew(.5, '25deg')
+		.scale(.1, .1)
+
+	document
+		.getElementById('div1')
+		.style[annie.transform] = t.getMatrixCSS()
+
+	</script>
+</body>
+</html>
