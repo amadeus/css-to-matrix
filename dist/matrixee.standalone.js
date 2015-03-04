@@ -366,6 +366,18 @@ umodel = (function() {
     return umodel;
 }));
 
+(function(root, factory) {
+    if(typeof exports === 'object') {
+        module.exports = factory(require('transform-to-matrix'), require('matrix-utilities'), require('umodel'));
+    }
+    else if(typeof define === 'function' && define.amd) {
+        define('matrixee', ['transform-to-matrix', 'matrix-utilities', 'umodel'], factory);
+    }
+    else {
+        root.Matrixee = factory(root['transform-to-matrix'], root['matrix-utilities'], root.umodel);
+    }
+}(this, function(transformToMatrix, matrixUtilities, umodel) {
+
 var _ = {
 
   // convert strings like "55deg" or ".75rad" to floats (in radians)
@@ -414,7 +426,7 @@ var _ = {
 
 };
 
-function CssToMatrix (data) {
+function Matrixee (data) {
 
   // default options
   this.model = new umodel({
@@ -435,7 +447,7 @@ function CssToMatrix (data) {
 
 }
 
-_.extend(CssToMatrix.prototype, {
+_.extend(Matrixee.prototype, {
 
   // set matrix in model
   matrix: function (data) {
@@ -594,3 +606,7 @@ _.extend(CssToMatrix.prototype, {
   })
 
 })
+
+return Matrixee;
+
+}));

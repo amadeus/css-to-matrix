@@ -42,12 +42,10 @@
 	<script src="../node_modules/matrix-utilities/matrix-utilities.js"></script>
 	<script src="../node_modules/transform-to-matrix/transform-to-matrix.js"></script>
 	<script src="../node_modules/umodel/umodel.js"></script>
-	<script src="../dist/css-to-matrix.js"></script>
+	<script src="../dist/matrixee.js"></script>
 	<script>
 
-	const CssToMatrix = window['css-to-matrix']
-
-	var t = new CssToMatrix()
+	var t = new Matrixee()
 		.translate(100, 100)
 		.rotate('45deg')
 		.skew(.5, '25deg')

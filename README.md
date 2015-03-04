@@ -1,4 +1,4 @@
-# css-to-matrix
+# Matrixee
 
 A little library for converting compound CSS transforms into their matrix equivalents.
 
@@ -7,7 +7,7 @@ A little library for converting compound CSS transforms into their matrix equiva
 ```coffee
 
 # using the default matrix
-new CssToMatrix
+new Matrixee
 
 # or using a custom 4x4 matrix (meaning some transformations are already applied)
 matrix = [
@@ -16,16 +16,16 @@ matrix = [
 	[9, 0, 1, 2]
 	[3, 4, 5, 6]
 ]
-new CssToMatrix matrix
+new Matrixee matrix
 
 ```
 
 ## example
 
 ```coffee
-cssToMatrix = new CssToMatrix
+matrixee = new Matrixee
 
-cssToMatrix
+matrixee
 
 # set some transforms
 .rotate '90deg'
@@ -43,12 +43,12 @@ cssToMatrix
 #	]
 
 # .. or as a CSS property
-cssToMatrix.getMatrixCSS()
+matrixee.getMatrixCSS()
 
 #=> "matrix3d(9.870993963020204, 0.7, 0, 0, -0.5, 0, 0, 0, 0, 0, 1, 0, 443.54969815101026, 35, 200, 1)"
 
 # set a new base matrix (on the basis of which transforms are applied)
-cssToMatrix.matrix [
+matrixee.matrix [
 	[3, 1, 4, 1]
 	[5, 9, 2, 6]
 	[5, 3, 5, 8]

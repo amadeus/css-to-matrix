@@ -1,6 +1,5 @@
 setup
 
-	CssToMatrix = window['css-to-matrix']
 	expect = chai.expect
 	div = document.getElementById 'test'
 	precision = 100000
@@ -19,8 +18,8 @@ setup
 
 		it 'adds data that is passed when intialized to its model', ->
 
-			cssToMatrix = new CssToMatrix data
-			actual = cssToMatrix.model.get 'matrix'
+			matrixee = new Matrixee data
+			actual = matrixee.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
@@ -28,15 +27,15 @@ setup
 
 		it 'should add valid data to its instance model', ->
 
-			cssToMatrix = new CssToMatrix
-			cssToMatrix.matrix data
-			actual = cssToMatrix.model.get 'matrix'
+			matrixee = new Matrixee
+			matrixee.matrix data
+			actual = matrixee.model.get 'matrix'
 
 			expect(actual).to.deep.equal data
 
 		it 'should throw an error when intialized with an invalid array', ->
 
-			fn = -> new CssToMatrix 'bad'
+			fn = -> new Matrixee 'bad'
 
 			expect(fn).to.throw Error
 
@@ -44,10 +43,10 @@ setup
 
 		it 'should properly apply transformations', ->
 
-			cssToMatrix = new CssToMatrix
-			cssToMatrix.translate3d 10, 20, 30
+			matrixee = new Matrixee
+			matrixee.translate3d 10, 20, 30
 
-			actual = cssToMatrix.getMatrix()
+			actual = matrixee.getMatrix()
 			expected = [
 				[1, 0, 0, 0]
 				[0, 1, 0, 0]
@@ -61,8 +60,8 @@ setup
 
 		it 'should convert matricies to CSS strings', ->
 
-			cssToMatrix = new CssToMatrix data
-			css = cssToMatrix.getMatrixCSS()
+			matrixee = new Matrixee data
+			css = matrixee.getMatrixCSS()
 
 			expect(css).to.equal 'matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)'
 

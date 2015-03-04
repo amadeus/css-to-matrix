@@ -1,13 +1,17 @@
 {
-  "name": "css-to-matrix",
-  "version": "1.0.0",
+  "name": "matrixee",
+  "version": "1.1.0",
   "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eighttrackmind/css-to-matrix.git"
+    "url": "https://github.com/amadeus/matrixee.git"
   },
-  "author": "Boris Cherny <boris@performancejs.com>",
+  "author": "Amadeus Demarzi <amadesdemarzi@gmail.com>",
   "contributors": [
+    {
+      "name": "Amadeus Demarzi",
+      "email": "amadeusdemarzi@gmail.com"
+    },
     {
       "name": "Boris Cherny",
       "email": "boris@performancejs.com"
@@ -16,14 +20,12 @@
   "devDependencies": {
     "annie": "~0.1.3",
     "chai": "^2.1.1",
-    "change-case": "^2.1.1",
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-concat": "^0.4.0",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-regex-replace": "~0.2.5",
-    "grunt-umd": "^1.7.4",
     "mocha": "^2.1.0"
   },
   "license": "MIT",
@@ -45,7 +47,7 @@
     "multiply",
     "css3"
   ],
-  "main": "dist/css-to-matrix.js",
+  "main": "dist/matrixee.js",
   "testling": {
     "files": "test/test.js",
     "browsers": {
