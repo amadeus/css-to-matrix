@@ -81,20 +81,22 @@ matrixutilities = (function() {
 
     return matrixutilities;
 }));
-(function() {
-  var fns, umd;
-
-  umd = function(factory) {
-    if (typeof exports === 'object') {
-      return module.exports = factory;
-    } else if (typeof define === 'function' && define.amd) {
-      return define([], factory);
-    } else {
-      return this['transform-to-matrix'] = factory;
+(function(root, factory) {
+    if(typeof exports === 'object') {
+        module.exports = factory();
     }
-  };
+    else if(typeof define === 'function' && define.amd) {
+        define('transform-to-matrix', [], factory);
+    }
+    else {
+        root['transform-to-matrix'] = factory();
+    }
+}(this, function() {
+var transformtomatrix;
 
-  fns = {
+transformtomatrix = (function() {
+  var fns;
+  return fns = {
     perspective: function(d) {
       return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, -1 / d, 1]];
     },
@@ -162,11 +164,10 @@ matrixutilities = (function() {
       return [[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]];
     }
   };
+})();
 
-  umd(fns);
-
-}).call(this);
-
+    return transformtomatrix;
+}));
 (function(root, factory) {
     if(typeof exports === 'object') {
         module.exports = factory();
@@ -376,12 +377,12 @@ var _ = {
           isDegrees = string.indexOf('deg') > -1
 
       // convert deg -> rad?
-      if (isDegrees) angle *= Math.PI / 180 
+      if (isDegrees) angle *= Math.PI / 180
 
       return angle
 
     }
-    
+
     return string
 
   },
@@ -392,7 +393,7 @@ var _ = {
     for (var key in b) {
       a[key] = b[key]
     }
-    
+
     return a
 
   },
@@ -479,7 +480,7 @@ _.extend(CssToMatrix.prototype, {
 
   },
 
-  // get matrix formatted as a string that can be plugged right into CSS's `transform` function 
+  // get matrix formatted as a string that can be plugged right into CSS's `transform` function
   getMatrixCSS: function() {
 
     return 'matrix3d('
