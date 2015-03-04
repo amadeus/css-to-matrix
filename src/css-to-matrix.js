@@ -9,12 +9,12 @@ var _ = {
           isDegrees = string.indexOf('deg') > -1
 
       // convert deg -> rad?
-      if (isDegrees) angle *= Math.PI / 180 
+      if (isDegrees) angle *= Math.PI / 180
 
       return angle
 
     }
-    
+
     return string
 
   },
@@ -25,7 +25,7 @@ var _ = {
     for (var key in b) {
       a[key] = b[key]
     }
-    
+
     return a
 
   },
@@ -112,7 +112,7 @@ _.extend(CssToMatrix.prototype, {
 
   },
 
-  // get matrix formatted as a string that can be plugged right into CSS's `transform` function 
+  // get matrix formatted as a string that can be plugged right into CSS's `transform` function
   getMatrixCSS: function() {
 
     return 'matrix3d('
