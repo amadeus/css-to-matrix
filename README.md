@@ -109,3 +109,5 @@ then, open test/index.html in a browser
 ## license
 
 MIT
+
+Project was forked from [bcherny/css-to-matrix](https://github.com/bcherny/css-to-matrix)
