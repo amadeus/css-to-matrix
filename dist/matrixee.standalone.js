@@ -390,7 +390,7 @@ umodel = (function() {
 			root.umodel
 		);
 	}
-})(this, function(transformToMatrix, matrixUtilities, UModel) {
+})(this, function(transformToMatrix, Utilities, UModel) {
 
 // convert strings like "55deg" or ".75rad" to floats (in radians)
 var _getRad = function (string) {
@@ -419,13 +419,13 @@ var _convertCSS2DMatrix = function(data){
 var Matrixee = function Matrixee (data) {
 	// default options
 	this.model = new UModel({
-		matrix: new matrixUtilities.Identity(),
+		matrix: new Utilities.Identity(),
 		transformations: {
-			perspective : new matrixUtilities.Identity(),
-			rotate      : new matrixUtilities.Identity(),
-			scale       : new matrixUtilities.Identity(),
-			skew        : new matrixUtilities.Identity(),
-			translate   : new matrixUtilities.Identity()
+			perspective : new Utilities.Identity(),
+			rotate      : new Utilities.Identity(),
+			scale       : new Utilities.Identity(),
+			skew        : new Utilities.Identity(),
+			translate   : new Utilities.Identity()
 		}
 	});
 
@@ -496,21 +496,21 @@ Matrixee.prototype = {
 			t = this.model.get('transformations');
 
 		// perspective
-		matrix = matrixUtilities.multiply(matrix, t.perspective);
+		matrix = Utilities.multiply(matrix, t.perspective);
 
 		// translate
-		matrix = matrixUtilities.multiply(matrix, t.translate);
+		matrix = Utilities.multiply(matrix, t.translate);
 
 		// rotate
-		matrix = matrixUtilities.multiply(matrix, t.rotate);
+		matrix = Utilities.multiply(matrix, t.rotate);
 
 		// skew
-		matrix = matrixUtilities.multiply(matrix, t.skew);
+		matrix = Utilities.multiply(matrix, t.skew);
 
 		// scale
-		matrix = matrixUtilities.multiply(matrix, t.scale);
+		matrix = Utilities.multiply(matrix, t.scale);
 
-		return matrixUtilities.flip(matrix);
+		return Utilities.flip(matrix);
 	},
 
 	// get matrix formatted as a string that can be plugged right into CSS's `transform` function
@@ -579,7 +579,10 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set('transformations/perspective', transformToMatrix.perspective(x));
+		this.model.set(
+			'transformations/perspective',
+			transformToMatrix.perspective(x)
+		);
 		return this;
 	},
 
@@ -611,7 +614,15 @@ Matrixee.prototype = {
 		////END DEV
 
 		// if angle was passed as a string, convert it to a float first
-		this.model.set('transformations/rotate', transformToMatrix.rotate3d(x, y, z, _getRad(a)));
+		this.model.set(
+			'transformations/rotate',
+			transformToMatrix.rotate3d(
+				x,
+				y,
+				z,
+				_getRad(a)
+			)
+		);
 
 		return this;
 	},
@@ -640,7 +651,10 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set('transformations/scale', transformToMatrix.scale3d(x, y, z));
+		this.model.set(
+			'transformations/scale',
+			transformToMatrix.scale3d(x, y, z)
+		);
 
 		return this;
 	},
@@ -655,7 +669,7 @@ Matrixee.prototype = {
 
 		this.model.set(
 			'transformations/skew',
-			matrixUtilities.to3d(
+			Utilities.to3d(
 				transformToMatrix.skew(
 					_getRad(x),
 					_getRad(y)
@@ -702,4 +716,3 @@ Matrixee.prototype = {
 return Matrixee;
 
 });
-
