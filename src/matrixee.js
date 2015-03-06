@@ -160,42 +160,55 @@ Matrixee.prototype = {
 	rotate     : function (a) {
 		return this.rotateZ(a);
 	},
+
 	rotateX    : function (a) {
 		return this.rotate3d(1, 0, 0, a);
 	},
+
 	rotateY    : function (a) {
 		return this.rotate3d(0, 1, 0, a);
 	},
+
 	rotateZ    : function (a) {
 		return this.rotate3d(0, 0, 1, a);
 	},
+
 	scale      : function (x, y) {
 		return this.scale3d(x, y);
 	},
+
 	scaleX     : function (x) {
 		return this.scale3d(x);
 	},
+
 	scaleY     : function (y) {
 		return this.scale3d(null, y);
 	},
+
 	scaleZ     : function (z) {
 		return this.scale3d(null, null, z);
 	},
+
 	skewX      : function (x) {
 		return this.skew(x);
 	},
+
 	skewY      : function (y) {
 		return this.skew(null, y);
 	},
+
 	translate  : function (x, y) {
 		return this.translate3d(x, y);
 	},
+
 	translateX : function (x) {
 		return this.translate3d(x);
 	},
+
 	translateY : function (y) {
 		return this.translate3d(null, y);
 	},
+
 	translateZ : function (z) {
 		return this.translate3d(null, null, z);
 	},
@@ -219,7 +232,6 @@ Matrixee.prototype = {
 	},
 
 	rotate3d: function (x, y, z, a) {
-
 		if (!x) {
 			x = 0;
 		}
@@ -260,7 +272,6 @@ Matrixee.prototype = {
 	},
 
 	scale3d: function (x, y, z) {
-
 		if (!x && x !== 0) {
 			x = 1;
 		}
