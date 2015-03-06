@@ -1,8 +1,19 @@
 {
-	"eqnull": true,
-	"esnext": true,
-	"laxbreak": true,
-	"laxcomma": true,
-	"asi": true,
-	"smarttabs": true
+	"undef"    : true,
+	"unused"   : "vars",
+	"latedef"  : true,
+	"newcap"   : true,
+	"noarg"    : true,
+	"noempty"  : true,
+	"quotmark" : false,
+	"trailing" : true,
+	"browser"  : true,
+	"forin"    : false,
+	"onevar"   : false,
+	"noempty"  : true,
+	"globals"  : {
+		"module": true,
+		"require": true,
+		"define": true
+	}
 }
