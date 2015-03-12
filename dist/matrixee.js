@@ -2,27 +2,24 @@
 	if (typeof exports === 'object') {
 		module.exports = factory(
 		  require('transform-to-matrix'),
-		  require('matrix-utilities'),
-		  require('umodel')
+		  require('matrix-utilities')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
 			'matrixee',
 			[
 				'transform-to-matrix',
-				'matrix-utilities',
-				'umodel'
+				'matrix-utilities'
 			],
 			factory
 		);
 	} else {
 		root.Matrixee = factory(
 			root['transform-to-matrix'],
-			root['matrix-utilities'],
-			root.umodel
+			root['matrix-utilities']
 		);
 	}
-})(this, function(transformToMatrix, Utilities, UModel) {
+})(this, function(transformToMatrix, Utilities) {
 
 // convert strings like "55deg" or ".75rad" to floats (in radians)
 var _getRad = function (string) {
@@ -44,21 +41,18 @@ var _getRad = function (string) {
 var _toString = Object.prototype.toString;
 
 var Matrixee = function Matrixee (data) {
-	// default options
-	this.model = new UModel({
-		matrix: new Utilities.Identity(),
-		transformations: {
-			perspective : new Utilities.Identity(),
-			rotate      : new Utilities.Identity(),
-			scale       : new Utilities.Identity(),
-			skew        : new Utilities.Identity(),
-			translate   : new Utilities.Identity()
-		}
-	});
+	this.matrix = new Utilities.Identity();
+	this.transformations = {
+		perspective : new Utilities.Identity(),
+		rotate      : new Utilities.Identity(),
+		scale       : new Utilities.Identity(),
+		skew        : new Utilities.Identity(),
+		translate   : new Utilities.Identity()
+	};
 
 	// set data?
 	if (data) {
-		this.matrix(data);
+		this.setMatrix(data);
 	}
 };
 
@@ -66,7 +60,7 @@ var _matrixRegex = /(.*matrix[\w]*\(| |\).*)/g;
 
 Matrixee.prototype = {
 	// set matrix in model
-	matrix: function (data) {
+	setMatrix: function (data) {
 		////DEV
 		if (_toString.call(data) !== '[object Array]') {
 			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + _toString.call(data));
@@ -89,21 +83,21 @@ Matrixee.prototype = {
 			Matrixee.from3x3to4x4(data);
 		}
 
-		this.model.set('matrix', data);
+		this.matrix = Matrixee.merge(this.matrix, data);
 
 		return this;
 	},
 
 	setMatrixFromCSS: function(str){
 		var matrix = Matrixee.getMatrixFromCSS(str);
-		this.matrix(matrix);
+		this.setMatrix(matrix);
 		return this;
 	},
 
 	// apply transformations as defined in the model, and get back get calculated matrix
 	getMatrix: function() {
-		var matrix = this.model.get('matrix'),
-			t = this.model.get('transformations');
+		var matrix = Matrixee.clone(this.matrix),
+			t = this.transformations;
 
 		// perspective
 		matrix = Utilities.multiply(matrix, t.perspective);
@@ -201,8 +195,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/perspective',
+		Matrixee.merge(
+			this.transformations.perspective,
 			transformToMatrix.perspective(x)
 		);
 		return this;
@@ -234,9 +228,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		// if angle was passed as a string, convert it to a float first
-		this.model.set(
-			'transformations/rotate',
+		Matrixee.merge(
+			this.transformations.rotate,
 			transformToMatrix.rotate3d(
 				x,
 				y,
@@ -244,6 +237,7 @@ Matrixee.prototype = {
 				_getRad(a)
 			)
 		);
+
 
 		return this;
 	},
@@ -271,8 +265,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/scale',
+		Matrixee.merge(
+			this.transformations.scale,
 			transformToMatrix.scale3d(x, y, z)
 		);
 
@@ -287,8 +281,8 @@ Matrixee.prototype = {
 			y = 0;
 		}
 
-		this.model.set(
-			'transformations/skew',
+		Matrixee.merge(
+			this.transformations.skew,
 			Utilities.to3d(
 				transformToMatrix.skew(
 					_getRad(x),
@@ -323,14 +317,40 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/translate',
+		Matrixee.merge(
+			this.transformations.translate,
 			transformToMatrix.translate3d(x, y, z)
 		);
 
 		return this;
 	}
 
+};
+
+Matrixee.clone = function(matrix){
+	var newMatrix = [],
+		r, c;
+
+	for (r = 0; r < matrix.length; r++) {
+		newMatrix[r] = [];
+		for (c = 0; c < matrix[r].length; c++) {
+			newMatrix[r][c] = matrix[r][c] || 0;
+		}
+	}
+
+	return newMatrix;
+};
+
+Matrixee.merge = function(base, toMerge){
+	var r, c;
+
+	for (r = 0; r < base.length; r++) {
+		for (c = 0; c < base[r].length; c++) {
+			base[r][c] = toMerge[r][c] || 0;
+		}
+	}
+
+	return base;
 };
 
 Matrixee.from3x3to4x4 = function(matrix){

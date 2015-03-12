@@ -18,16 +18,14 @@ setup
 
 		it 'adds data that is passed when intialized to its model', ->
 			matrixee = new Matrixee data
-			actual = matrixee.model.get 'matrix'
-			expect(actual).to.deep.equal data
+			expect(matrixee.matrix).to.deep.equal data
 
 	describe 'matrix', ->
 
 		it 'add valid data to its instance model', ->
 			matrixee = new Matrixee
 			matrixee.setMatrix data
-			actual = matrixee.model.get 'matrix'
-			expect(actual).to.deep.equal data
+			expect(matrixee.matrix).to.deep.equal data
 
 		it 'throw an error when intialized with an invalid array', ->
 			fn = -> new Matrixee 'bad'

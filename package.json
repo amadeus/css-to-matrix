@@ -32,8 +32,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "transform-to-matrix": "~0",
-    "matrix-utilities": "^1.2",
-    "umodel": "~0"
+    "matrix-utilities": "^1.2"
   },
   "scripts": {
     "test": "grunt test"

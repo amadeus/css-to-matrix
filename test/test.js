@@ -13,20 +13,18 @@
 
   describe('constructor', function() {
     return it('adds data that is passed when intialized to its model', function() {
-      var actual, matrixee;
+      var matrixee;
       matrixee = new Matrixee(data);
-      actual = matrixee.model.get('matrix');
-      return expect(actual).to.deep.equal(data);
+      return expect(matrixee.matrix).to.deep.equal(data);
     });
   });
 
   describe('matrix', function() {
     it('add valid data to its instance model', function() {
-      var actual, matrixee;
+      var matrixee;
       matrixee = new Matrixee;
       matrixee.setMatrix(data);
-      actual = matrixee.model.get('matrix');
-      return expect(actual).to.deep.equal(data);
+      return expect(matrixee.matrix).to.deep.equal(data);
     });
     it('throw an error when intialized with an invalid array', function() {
       var fn;

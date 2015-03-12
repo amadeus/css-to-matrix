@@ -169,228 +169,27 @@ transformtomatrix = (function() {
     return transformtomatrix;
 }));
 (function(root, factory) {
-    if(typeof exports === 'object') {
-        module.exports = factory();
-    }
-    else if(typeof define === 'function' && define.amd) {
-        define('umodel', [], factory);
-    }
-    else {
-        root.umodel = factory();
-    }
-}(this, function() {
-var umodel, _,
-  __hasProp = {}.hasOwnProperty;
-
-_ = {
-  extend: function(a, b) {
-    var key;
-    for (key in b) {
-      if (!__hasProp.call(b, key)) continue;
-      a[key] = b[key];
-    }
-    return a;
-  },
-  trim: (function() {
-    var head, tail;
-    if (''.trim) {
-      return function(string) {
-        return string.trim();
-      };
-    } else {
-      head = /^\s\s*/;
-      tail = /\s\s*$/;
-      return function(string) {
-        return string.replace(head, '').replace(tail, '');
-      };
-    }
-  })()
-};
-
-umodel = (function() {
-  function umodel(_data, options) {
-    this._data = _data != null ? _data : {};
-    this.options = {
-      separator: '/'
-    };
-    if (options) {
-      _.extend(this.options, options);
-    }
-    this.events = {};
-  }
-
-  umodel.prototype.get = function(key) {
-    this.trigger('get', key);
-    return this._get(this._split(key), this._data);
-  };
-
-  umodel.prototype.set = function(key, value) {
-    var old;
-    old = this._get(this._split(key), this._data);
-    this._set(this._split(key), value, false, this._data);
-    return this.trigger('set', key, value, old);
-  };
-
-  umodel.prototype.setnx = function(key, value) {
-    var old;
-    old = this._get(this._split(key), this._data);
-    this._set(this._split(key), value, true, this._data);
-    return this.trigger('setnx', key, value, old);
-  };
-
-  umodel.prototype.on = function(eventAndProperty, fn) {
-    var e, _results;
-    if (fn) {
-      return this._on(eventAndProperty, fn);
-    } else {
-      _results = [];
-      for (e in eventAndProperty) {
-        fn = eventAndProperty[e];
-        _results.push(this._on(e, fn));
-      }
-      return _results;
-    }
-  };
-
-  umodel.prototype.trigger = function(event, path, value, oldValue) {
-    var e, fn, fns, _ref, _results;
-    if (path == null) {
-      path = '*';
-    }
-    path = this._normalize(path);
-    if (event in this.events) {
-      _ref = this.events[event];
-      _results = [];
-      for (e in _ref) {
-        fns = _ref[e];
-        if (e === '*' || (path + '/').indexOf(e + '/') === 0) {
-          _results.push((function() {
-            var _i, _len, _results1;
-            _results1 = [];
-            for (_i = 0, _len = fns.length; _i < _len; _i++) {
-              fn = fns[_i];
-              if (oldValue != null) {
-                _results1.push(fn.call(this, path, value, oldValue));
-              } else {
-                _results1.push(fn.call(this, path, value));
-              }
-            }
-            return _results1;
-          }).call(this));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    }
-  };
-
-  umodel.prototype._get = function(key, parent, accumulator) {
-    var head;
-    if (accumulator == null) {
-      accumulator = [];
-    }
-    head = key.shift();
-    if (head) {
-      if (!(head in parent)) {
-        return void 0;
-      }
-      accumulator.push(head);
-      return this._get(key, parent[head], accumulator);
-    }
-    return parent;
-  };
-
-  umodel.prototype._set = function(key, value, nx, parent, accumulator) {
-    var head;
-    if (nx == null) {
-      nx = false;
-    }
-    if (accumulator == null) {
-      accumulator = [];
-    }
-    head = key.shift();
-    if (key.length) {
-      if (!(head in parent)) {
-        parent[head] = {};
-      }
-      accumulator.push(head);
-      return this._set(key, value, nx, parent[head], accumulator);
-    }
-    if (!(nx && head in parent)) {
-      return parent[head] = value;
-    }
-  };
-
-  umodel.prototype._on = function(eventAndProperty, fn) {
-    var event, events, parts, property, _i, _len, _results;
-    parts = eventAndProperty.split(':');
-    events = parts[0].split(' ');
-    property = this._normalize(parts[1] || '*');
-    _results = [];
-    for (_i = 0, _len = events.length; _i < _len; _i++) {
-      event = events[_i];
-      event = _.trim(event);
-      if (!(event in this.events)) {
-        this.events[event] = {};
-      }
-      if (!(property in this.events[event])) {
-        this.events[event][property] = [];
-      }
-      _results.push(this.events[event][property].push(fn));
-    }
-    return _results;
-  };
-
-  umodel.prototype._normalize = function(key) {
-    var separator;
-    separator = this.options.separator;
-    key = _.trim(key);
-    if (key.charAt(0) === separator) {
-      key = key.slice(1);
-    }
-    if (key.charAt(key.length - 1) === separator) {
-      key = key.slice(0, -1);
-    }
-    return key;
-  };
-
-  umodel.prototype._split = function(key) {
-    return (this._normalize(key)).split(this.options.separator);
-  };
-
-  return umodel;
-
-})();
-
-    return umodel;
-}));
-
-(function(root, factory) {
 	if (typeof exports === 'object') {
 		module.exports = factory(
 		  require('transform-to-matrix'),
-		  require('matrix-utilities'),
-		  require('umodel')
+		  require('matrix-utilities')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
 			'matrixee',
 			[
 				'transform-to-matrix',
-				'matrix-utilities',
-				'umodel'
+				'matrix-utilities'
 			],
 			factory
 		);
 	} else {
 		root.Matrixee = factory(
 			root['transform-to-matrix'],
-			root['matrix-utilities'],
-			root.umodel
+			root['matrix-utilities']
 		);
 	}
-})(this, function(transformToMatrix, Utilities, UModel) {
+})(this, function(transformToMatrix, Utilities) {
 
 // convert strings like "55deg" or ".75rad" to floats (in radians)
 var _getRad = function (string) {
@@ -412,21 +211,18 @@ var _getRad = function (string) {
 var _toString = Object.prototype.toString;
 
 var Matrixee = function Matrixee (data) {
-	// default options
-	this.model = new UModel({
-		matrix: new Utilities.Identity(),
-		transformations: {
-			perspective : new Utilities.Identity(),
-			rotate      : new Utilities.Identity(),
-			scale       : new Utilities.Identity(),
-			skew        : new Utilities.Identity(),
-			translate   : new Utilities.Identity()
-		}
-	});
+	this.matrix = new Utilities.Identity();
+	this.transformations = {
+		perspective : new Utilities.Identity(),
+		rotate      : new Utilities.Identity(),
+		scale       : new Utilities.Identity(),
+		skew        : new Utilities.Identity(),
+		translate   : new Utilities.Identity()
+	};
 
 	// set data?
 	if (data) {
-		this.matrix(data);
+		this.setMatrix(data);
 	}
 };
 
@@ -434,7 +230,7 @@ var _matrixRegex = /(.*matrix[\w]*\(| |\).*)/g;
 
 Matrixee.prototype = {
 	// set matrix in model
-	matrix: function (data) {
+	setMatrix: function (data) {
 		////DEV
 		if (_toString.call(data) !== '[object Array]') {
 			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + _toString.call(data));
@@ -457,21 +253,21 @@ Matrixee.prototype = {
 			Matrixee.from3x3to4x4(data);
 		}
 
-		this.model.set('matrix', data);
+		this.matrix = Matrixee.merge(this.matrix, data);
 
 		return this;
 	},
 
 	setMatrixFromCSS: function(str){
 		var matrix = Matrixee.getMatrixFromCSS(str);
-		this.matrix(matrix);
+		this.setMatrix(matrix);
 		return this;
 	},
 
 	// apply transformations as defined in the model, and get back get calculated matrix
 	getMatrix: function() {
-		var matrix = this.model.get('matrix'),
-			t = this.model.get('transformations');
+		var matrix = Matrixee.clone(this.matrix),
+			t = this.transformations;
 
 		// perspective
 		matrix = Utilities.multiply(matrix, t.perspective);
@@ -569,8 +365,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/perspective',
+		Matrixee.merge(
+			this.transformations.perspective,
 			transformToMatrix.perspective(x)
 		);
 		return this;
@@ -602,9 +398,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		// if angle was passed as a string, convert it to a float first
-		this.model.set(
-			'transformations/rotate',
+		Matrixee.merge(
+			this.transformations.rotate,
 			transformToMatrix.rotate3d(
 				x,
 				y,
@@ -612,6 +407,7 @@ Matrixee.prototype = {
 				_getRad(a)
 			)
 		);
+
 
 		return this;
 	},
@@ -639,8 +435,8 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/scale',
+		Matrixee.merge(
+			this.transformations.scale,
 			transformToMatrix.scale3d(x, y, z)
 		);
 
@@ -655,8 +451,8 @@ Matrixee.prototype = {
 			y = 0;
 		}
 
-		this.model.set(
-			'transformations/skew',
+		Matrixee.merge(
+			this.transformations.skew,
 			Utilities.to3d(
 				transformToMatrix.skew(
 					_getRad(x),
@@ -691,14 +487,40 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.model.set(
-			'transformations/translate',
+		Matrixee.merge(
+			this.transformations.translate,
 			transformToMatrix.translate3d(x, y, z)
 		);
 
 		return this;
 	}
 
+};
+
+Matrixee.clone = function(matrix){
+	var newMatrix = [],
+		r, c;
+
+	for (r = 0; r < matrix.length; r++) {
+		newMatrix[r] = [];
+		for (c = 0; c < matrix[r].length; c++) {
+			newMatrix[r][c] = matrix[r][c] || 0;
+		}
+	}
+
+	return newMatrix;
+};
+
+Matrixee.merge = function(base, toMerge){
+	var r, c;
+
+	for (r = 0; r < base.length; r++) {
+		for (c = 0; c < base[r].length; c++) {
+			base[r][c] = toMerge[r][c] || 0;
+		}
+	}
+
+	return base;
 };
 
 Matrixee.from3x3to4x4 = function(matrix){
