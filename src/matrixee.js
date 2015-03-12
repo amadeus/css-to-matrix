@@ -91,35 +91,14 @@ Matrixee.prototype = {
 		////END DEV
 
 		this.model.set('matrix', data);
+
+		return this;
 	},
 
-	getMatrixFromCSS: function(str){
-		var values, matrix, i, ii;
-
-		if (str === 'none') {
-			// FIXME: Create empty identity matrix
-			return this;
-		}
-
-		str = str.replace(_matrixRegex, '');
-		values = str.split(',');
-
-		if (values.length !== 16) {
-			values.splice(2, 0, 0, 0);
-			values.splice(6, 0, 0, 0);
-			values.push(1, 0, 0, 0, 0, 1);
-		}
-
-		matrix = [];
-
-		for (i = 0; i < values.length / 4; i++) {
-			matrix[i] = [];
-			for (ii = 0; ii < 4; ii++) {
-				matrix[i][ii] = parseFloat(values[(ii * 4) + i]);
-			}
-		}
-
-		return matrix;
+	setMatrixFromCSS: function(str){
+		var matrix = Matrixee.getMatrixFromCSS(str);
+		this.matrix(matrix);
+		return this;
 	},
 
 	// apply transformations as defined in the model, and get back get calculated matrix
@@ -354,6 +333,40 @@ Matrixee.prototype = {
 		return this;
 	}
 
+};
+
+Matrixee.getMatrixFromCSS = function(str){
+	var values, matrix, i, ii;
+
+	if (str === 'none' || !str) {
+		return new Utilities.Identity();
+	}
+
+	str = str.replace(_matrixRegex, '');
+	values = str.split(',');
+
+	////DEV
+	if (values.length !== 6 && values.length !== 16) {
+		throw new TypeError('invalid array parsed from string: ' + str);
+	}
+	////END DEV
+
+	if (values.length === 6) {
+		values.splice(2, 0, 0, 0);
+		values.splice(6, 0, 0, 0);
+		values.push(1, 0, 0, 0, 0, 1);
+	}
+
+	matrix = [];
+
+	for (i = 0; i < values.length / 4; i++) {
+		matrix[i] = [];
+		for (ii = 0; ii < 4; ii++) {
+			matrix[i][ii] = parseFloat(values[(i * 4) + ii]);
+		}
+	}
+
+	return matrix;
 };
 
 return Matrixee;
