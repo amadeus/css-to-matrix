@@ -1,3 +1,4 @@
+// jshint node:true
 module.exports = function(grunt) {
 
 var build, deps, name, nameParts, pkg, test;
