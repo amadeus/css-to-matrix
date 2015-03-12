@@ -365,10 +365,11 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		Matrixee.merge(
+		this.transformations.perspective = Utilities.multiply(
 			this.transformations.perspective,
 			transformToMatrix.perspective(x)
 		);
+
 		return this;
 	},
 
@@ -398,7 +399,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		Matrixee.merge(
+		this.transformations.rotate = Utilities.multiply(
 			this.transformations.rotate,
 			transformToMatrix.rotate3d(
 				x,
@@ -407,7 +408,6 @@ Matrixee.prototype = {
 				_getRad(a)
 			)
 		);
-
 
 		return this;
 	},
@@ -435,7 +435,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		Matrixee.merge(
+		this.transformations.scale = Utilities.multiply(
 			this.transformations.scale,
 			transformToMatrix.scale3d(x, y, z)
 		);
@@ -451,7 +451,7 @@ Matrixee.prototype = {
 			y = 0;
 		}
 
-		Matrixee.merge(
+		this.transformations.skew = Utilities.multiply(
 			this.transformations.skew,
 			Utilities.to3d(
 				transformToMatrix.skew(
