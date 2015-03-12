@@ -28,12 +28,20 @@
       actual = matrixee.model.get('matrix');
       return expect(actual).to.deep.equal(data);
     });
-    return it('throw an error when intialized with an invalid array', function() {
+    it('throw an error when intialized with an invalid array', function() {
       var fn;
       fn = function() {
         return new Matrixee('bad');
       };
       return expect(fn).to["throw"](Error);
+    });
+    return it('convert 3x3 matrix to 4x4', function() {
+      var actual, data2, expected, matrixee;
+      data2 = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
+      matrixee = new Matrixee(data2);
+      actual = matrixee.getMatrix();
+      expected = [[0, 1, 2, 0], [3, 4, 5, 0], [6, 7, 8, 0], [0, 0, 0, 1]];
+      return expect(actual).to.deep.equal(expected);
     });
   });
 

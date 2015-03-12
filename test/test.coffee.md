@@ -33,6 +33,22 @@ setup
 			fn = -> new Matrixee 'bad'
 			expect(fn).to.throw Error
 
+		it 'convert 3x3 matrix to 4x4', ->
+			data2 = [
+				[0, 1, 2],
+				[3, 4, 5],
+				[6, 7, 8]
+			]
+			matrixee = new Matrixee data2
+			actual  = matrixee.getMatrix()
+			expected = [
+				[0, 1, 2, 0],
+				[3, 4, 5, 0],
+				[6, 7, 8, 0],
+				[0, 0, 0, 1],
+			]
+			expect(actual).to.deep.equal expected
+
 	describe 'getMatrix', ->
 
 		it 'properly apply transformations', ->

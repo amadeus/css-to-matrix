@@ -411,11 +411,6 @@ var _getRad = function (string) {
 
 var _toString = Object.prototype.toString;
 
-// Converts output from
-var _convertCSS2DMatrix = function(data){
-	return data;
-};
-
 var Matrixee = function Matrixee (data) {
 	// default options
 	this.model = new UModel({
@@ -441,22 +436,26 @@ Matrixee.prototype = {
 	// set matrix in model
 	matrix: function (data) {
 		////DEV
-		var rows, columns;
 		if (_toString.call(data) !== '[object Array]') {
-			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + typeof data);
+			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + _toString.call(data));
 		}
-
-		rows    = data.length;
-		columns = rows > 0 ? rows : 0;
 
 		if (_toString.call(data[0]) !== '[object Array]') {
-			data = _convertCSS2DMatrix(data);
+			throw new TypeError('nested array expected.');
 		}
 
-		if (rows !== 4 || columns !== 4) {
-			throw new Error('expected parameter `data` to be a 4x4 matrix of arrays, but was given a ' + rows + 'x' + columns + ' matrix');
+		if (data.length !== data[0].length) {
+			throw new Error('parent and child arrays must be the same length');
+		}
+
+		if (data.length > 4 || data.length < 3) {
+			throw new Error('must be a 3x3 or 4x4 matrix, was ' + data.length + 'x' + data[0].length);
 		}
 		////END DEV
+
+		if (data.length === 3) {
+			Matrixee.from3x3to4x4(data);
+		}
 
 		this.model.set('matrix', data);
 
@@ -700,6 +699,14 @@ Matrixee.prototype = {
 		return this;
 	}
 
+};
+
+Matrixee.from3x3to4x4 = function(matrix){
+	matrix[0].push(0);
+	matrix[1].push(0);
+	matrix[2].push(0);
+	matrix[3] = [0, 0, 0, 1];
+	return matrix;
 };
 
 Matrixee.getMatrixFromCSS = function(str){
