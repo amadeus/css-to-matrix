@@ -40,25 +40,27 @@ setup
 			matrixee.translate3d 10, 20, 30
 			actual = matrixee.getMatrix()
 			expected = [
-				[1, 0, 0, 0]
-				[0, 1, 0, 0]
-				[0, 0, 1, 0]
-				[10, 20, 30, 1]
+				[1, 0, 0, 10]
+				[0, 1, 0, 20]
+				[0, 0, 1, 30]
+				[0, 0, 0, 1]
 			]
 			expect(actual).to.deep.equal expected
 
-	describe 'getMatrixCSS-durp', ->
+
+	describe 'getMatrixCSS', ->
 
 		it 'convert matricies to CSS strings', ->
 			matrixee = new Matrixee data
 			css = matrixee.getMatrixCSS()
 			expect(css).to.equal 'matrix3d(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)'
 
+
 	describe 'setMatrixFromCSS', ->
 
 		it 'set a 4x4 matrix from a matrix3d css string', ->
 			matrixee = new Matrixee
-			matrixee.setMatrixFromCSS 'matrix3d(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)'
+			matrixee.setMatrixFromCSS 'matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)'
 			actual = matrixee.getMatrix()
 			expected = [
 				[0, 4, 8,  12],
@@ -67,6 +69,13 @@ setup
 				[3, 7, 11, 15]
 			]
 			expect(actual).to.deep.equal expected
+
+		it 'getMatrixCSS should match what was passed to setMatrixFromCSS', ->
+			string = 'matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)'
+			matrixee = new Matrixee
+			matrixee.setMatrixFromCSS string
+			actual = matrixee.getMatrixCSS()
+			expect(actual).to.equal string
 
 		it 'set a 4x4 matrix from a matrix 2d css string', ->
 			matrixee = new Matrixee

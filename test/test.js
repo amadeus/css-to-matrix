@@ -43,12 +43,12 @@
       matrixee = new Matrixee;
       matrixee.translate3d(10, 20, 30);
       actual = matrixee.getMatrix();
-      expected = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [10, 20, 30, 1]];
+      expected = [[1, 0, 0, 10], [0, 1, 0, 20], [0, 0, 1, 30], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
   });
 
-  describe('getMatrixCSS-durp', function() {
+  describe('getMatrixCSS', function() {
     return it('convert matricies to CSS strings', function() {
       var css, matrixee;
       matrixee = new Matrixee(data);
@@ -61,10 +61,18 @@
     it('set a 4x4 matrix from a matrix3d css string', function() {
       var actual, expected, matrixee;
       matrixee = new Matrixee;
-      matrixee.setMatrixFromCSS('matrix3d(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)');
+      matrixee.setMatrixFromCSS('matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)');
       actual = matrixee.getMatrix();
       expected = [[0, 4, 8, 12], [1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15]];
       return expect(actual).to.deep.equal(expected);
+    });
+    it('getMatrixCSS should match what was passed to setMatrixFromCSS', function() {
+      var actual, matrixee, string;
+      string = 'matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)';
+      matrixee = new Matrixee;
+      matrixee.setMatrixFromCSS(string);
+      actual = matrixee.getMatrixCSS();
+      return expect(actual).to.equal(string);
     });
     it('set a 4x4 matrix from a matrix 2d css string', function() {
       var actual, expected, matrixee;

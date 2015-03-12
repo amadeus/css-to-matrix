@@ -121,14 +121,13 @@ Matrixee.prototype = {
 		// scale
 		matrix = Utilities.multiply(matrix, t.scale);
 
-		return Utilities.flip(matrix);
+		return matrix;
 	},
 
 	// get matrix formatted as a string that can be plugged right into CSS's `transform` function
 	getMatrixCSS: function() {
-		return 'matrix3d(' + this
-			.getMatrix()
-			.reduce(function (flat, row) {
+		return 'matrix3d(' +
+			Utilities.flip(this.getMatrix()).reduce(function (flat, row) {
 				flat.push.apply(flat, row);
 				return flat;
 			}, []).join(',') + ')';
@@ -365,6 +364,8 @@ Matrixee.getMatrixFromCSS = function(str){
 			matrix[i][ii] = parseFloat(values[(i * 4) + ii]);
 		}
 	}
+
+	matrix = Utilities.flip(matrix);
 
 	return matrix;
 };
