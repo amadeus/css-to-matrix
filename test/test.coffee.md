@@ -25,7 +25,7 @@ setup
 
 		it 'add valid data to its instance model', ->
 			matrixee = new Matrixee
-			matrixee.matrix data
+			matrixee.setMatrix data
 			actual = matrixee.model.get 'matrix'
 			expect(actual).to.deep.equal data
 

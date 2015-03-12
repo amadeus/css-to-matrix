@@ -24,7 +24,7 @@
     it('add valid data to its instance model', function() {
       var actual, matrixee;
       matrixee = new Matrixee;
-      matrixee.matrix(data);
+      matrixee.setMatrix(data);
       actual = matrixee.model.get('matrix');
       return expect(actual).to.deep.equal(data);
     });

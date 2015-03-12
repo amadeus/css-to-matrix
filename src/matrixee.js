@@ -58,7 +58,7 @@ var Matrixee = function Matrixee (data) {
 
 	// set data?
 	if (data) {
-		this.matrix(data);
+		this.setMatrix(data);
 	}
 };
 
@@ -66,7 +66,7 @@ var _matrixRegex = /(.*matrix[\w]*\(| |\).*)/g;
 
 Matrixee.prototype = {
 	// set matrix in model
-	matrix: function (data) {
+	setMatrix: function (data) {
 		////DEV
 		if (_toString.call(data) !== '[object Array]') {
 			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + _toString.call(data));
@@ -96,7 +96,7 @@ Matrixee.prototype = {
 
 	setMatrixFromCSS: function(str){
 		var matrix = Matrixee.getMatrixFromCSS(str);
-		this.matrix(matrix);
+		this.setMatrix(matrix);
 		return this;
 	},
 
