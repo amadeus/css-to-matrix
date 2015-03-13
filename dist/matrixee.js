@@ -360,15 +360,18 @@ var Utils = {
 	},
 
 	flip: function(matrix) {
-		var j, k, result, row, value, _i, _j, _len, _len1;
+		var r, c, result, row, value, len;
 		result = [];
-		for (j = _i = 0, _len = matrix.length; _i < _len; j = ++_i) {
-			row = matrix[j];
-			for (k = _j = 0, _len1 = row.length; _j < _len1; k = ++_j) {
-				value = row[k];
-				(result[k] || (result[k] = []))[j] = value;
+		len = matrix.length;
+
+		for (r = 0; r < len; r++) {
+			row = matrix[r];
+			for (c = 0; c < len; c++) {
+				value = row[c];
+				(result[c] || (result[c] = []))[r] = value;
 			}
 		}
+
 		return result;
 	},
 
