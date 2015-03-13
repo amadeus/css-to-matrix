@@ -459,9 +459,11 @@ Transformer.getMatrixFromCSS = function(str){
 // ported to modify the original and create less garbage
 Transformer.multiply = function(base, toMultiply) {
 	var r, c, l, result, row, size, sum;
+	////DEV
 	if (base[0].length !== toMultiply.length) {
 		throw new Error('Matrix 1\'s row count should equal matrix 2\'s column count');
 	}
+	////END DEV
 	result = [];
 	size = toMultiply.length;
 	for (r = 0; r < size; r++) {
@@ -508,12 +510,20 @@ Transformer.flip = function(matrix) {
 
 // Ported from https://github.com/eighttrackmind/matrix-utilities
 Transformer.to2d = function(matrix){
-	return [[matrix[0][0] || 1, matrix[0][1] || 0, matrix[0][3] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, matrix[1][3] || 0]];
+	return [
+		[matrix[0][0] || 1, matrix[0][1] || 0, matrix[0][3] || 0],
+		[matrix[1][0] || 0, matrix[1][1] || 1, matrix[1][3] || 0]
+	];
 };
 
 // Ported from https://github.com/eighttrackmind/matrix-utilities
 Transformer.to3d = function(matrix) {
-	return [[matrix[0][0] || 1, matrix[0][1] || 0, 0, matrix[0][2] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, 0, matrix[1][2] || 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+	return [
+		[matrix[0][0] || 1, matrix[0][1] || 0, 0, matrix[0][2] || 0],
+		[matrix[1][0] || 0, matrix[1][1] || 1, 0, matrix[1][2] || 0],
+		[0, 0, 1, 0],
+		[0, 0, 0, 1]
+	];
 };
 
 // Ported from https://github.com/eighttrackmind/matrix-utilities
@@ -523,7 +533,12 @@ Transformer.identity = function(matrix){
 	var r, c;
 
 	if (!matrix) {
-		return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+		return [
+			[1, 0, 0, 0],
+			[0, 1, 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, 0, 1]
+		];
 	}
 
 	for (r = 0; r < matrix.length; r++) {
