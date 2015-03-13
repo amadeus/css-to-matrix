@@ -39,9 +39,8 @@ grunt.config.init({
 			},
 			comments: false
 		},
-		standalone: {
+		standard: {
 			files: {
-				'dist/<%= pkg.name %>.standalone.min.js': ['dist/<%= pkg.name %>.standalone.js'],
 				'dist/<%= pkg.name %>.min.js': ['src/<%= pkg.name %>.js']
 			}
 		}
@@ -50,18 +49,11 @@ grunt.config.init({
 		standard: {
 			src: 'src/<%= pkg.name %>.js',
 			dest: 'dist/<%= pkg.name %>.js'
-		},
-		standalone: {
-			src: [
-				'node_modules/transform-to-matrix/transform-to-matrix.js',
-				'dist/<%= pkg.name %>.js'
-			],
-			dest: 'dist/<%= pkg.name %>.standalone.js'
 		}
 	},
 	'regex-replace': {
 		min: {
-			src: ['dist/<%= pkg.name %>.min.js', 'dist/<%= pkg.name %>.standalone.min.js'],
+			src: ['dist/<%= pkg.name %>.min.js'],
 			actions: [
 				{
 					name: 'remove debug checks',

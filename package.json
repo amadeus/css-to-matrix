@@ -30,9 +30,7 @@
   },
   "license": "MIT",
   "readmeFilename": "README.md",
-  "dependencies": {
-    "transform-to-matrix": "~0"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "grunt test"
   },

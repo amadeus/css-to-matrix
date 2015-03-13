@@ -1,20 +1,16 @@
 (function(root, factory) {
 	if (typeof exports === 'object') {
-		module.exports = factory(
-		  require('transform-to-matrix')
-		);
+		module.exports = factory();
 	} else if (typeof define === 'function' && define.amd) {
 		define(
 			'transformer',
-			['transform-to-matrix'],
+			[],
 			factory
 		);
 	} else {
-		root.Transformer = factory(
-			root['transform-to-matrix']
-		);
+		root.Transformer = factory();
 	}
-})(this, function(transformToMatrix) {
+})(this, function() {
 
 // convert strings like "55deg" or ".75rad" to floats (in radians)
 var _getRad = function (string) {
@@ -167,7 +163,7 @@ Transformer.prototype = {
 
 		Transformer.multiply(
 			this.matrix,
-			transformToMatrix.perspective(x)
+			Compute.perspective(x)
 		);
 
 		return this;
@@ -201,7 +197,7 @@ Transformer.prototype = {
 
 		Transformer.multiply(
 			this.matrix,
-			transformToMatrix.rotate3d(
+			Compute.rotate3d(
 				x,
 				y,
 				z,
@@ -237,7 +233,7 @@ Transformer.prototype = {
 
 		Transformer.multiply(
 			this.matrix,
-			transformToMatrix.scale3d(x, y, z)
+			Compute.scale3d(x, y, z)
 		);
 
 		return this;
@@ -254,7 +250,7 @@ Transformer.prototype = {
 		Transformer.multiply(
 			this.matrix,
 			Transformer.to3d(
-				transformToMatrix.skew(
+				Compute.skew(
 					_getRad(x),
 					_getRad(y)
 				)
@@ -289,7 +285,7 @@ Transformer.prototype = {
 
 		Transformer.multiply(
 			this.matrix,
-			transformToMatrix.translate3d(x, y, z)
+			Compute.translate3d(x, y, z)
 		);
 
 		return this;
@@ -465,6 +461,99 @@ Transformer.identity = function(matrix){
 	}
 
 	return matrix;
+};
+
+// Ported from https://github.com/eighttrackmind/transform-to-matrix
+var Compute = {
+	perspective: function(d) {
+		return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, -1 / d, 1]];
+	},
+
+	rotate: function(a) {
+		return Compute.rotateZ(a);
+	},
+
+	rotateX: function(a) {
+		return Compute.rotate3d(1, 0, 0, a);
+	},
+
+	rotateY: function(a) {
+		return Compute.rotate3d(0, 1, 0, a);
+	},
+
+	rotateZ: function(a) {
+		var c, n;
+		c = Math.cos(a);
+		n = Math.sin(a);
+		return [[c, -n, 0], [n, c, 0]];
+	},
+
+	rotate3d: function(x, y, z, a) {
+		var c, i, n, rs, s;
+		s = x * x + y * y + z * z;
+		c = Math.cos(a);
+		n = Math.sin(a);
+		i = 1 - c;
+		rs = Math.sqrt(s) * n;
+		return [
+			[(x * x + (y * y + z * z) * c) / s, (x * y * i - z * rs) / s, (x * z * i + y * rs) / s, 0],
+			[(x * y * i + z * rs) / s, (y * y + (x * x + z * z) * c) / s, (y * z * i - x * rs) / s, 0],
+			[(x * z * i - y * rs) / s, (y * z * i + x * rs) / s, (z * z + (x * x + y * y) * c) / s, 0],
+			[0, 0, 0, 1]
+		];
+	},
+
+	scale: function(x, y) {
+		return [[x, 0, 0], [0, y, 0]];
+	},
+
+	scaleX: function(x) {
+		return Compute.scale(x, 1);
+	},
+
+	scaleY: function(y) {
+		return Compute.scale(1, y);
+	},
+
+	scaleZ: function(z) {
+		return Compute.scale3d(1, 1, z);
+	},
+
+	scale3d: function(x, y, z) {
+		return [[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]];
+	},
+
+	skew: function(x, y) {
+		return [[1, Math.tan(x), 0], [Math.tan(y), 1, 0]];
+	},
+
+	skewX: function(x) {
+		return [[1, Math.tan(x), 0], [0, 1, 0]];
+	},
+
+	skewY: function(y) {
+		return [[1, 0, 0], [Math.tan(y), 1, 0]];
+	},
+
+	translate: function(x, y) {
+		return [[1, 0, x], [0, 1, y]];
+	},
+
+	translateX: function(x) {
+		return Compute.translate(x, 0);
+	},
+
+	translateY: function(y) {
+		return Compute.translate(0, y);
+	},
+
+	translateZ: function(z) {
+		return Compute.translate3d(0, 0, z);
+	},
+
+	translate3d: function(x, y, z) {
+		return [[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]];
+	}
 };
 
 return Transformer;
