@@ -1,10 +1,10 @@
 {
-  "name": "matrixee",
+  "name": "transformer",
   "version": "1.1.0",
   "description": "A little library for converting compound CSS transforms into their matrix equivalents",
   "repository": {
     "type": "git",
-    "url": "https://github.com/amadeus/matrixee.git"
+    "url": "https://github.com/amadeus/transformer.git"
   },
   "author": "Amadeus Demarzi <amadesdemarzi@gmail.com>",
   "contributors": [
@@ -45,7 +45,7 @@
     "multiply",
     "css3"
   ],
-  "main": "dist/matrixee.js",
+  "main": "dist/transformer.js",
   "testling": {
     "files": "test/test.js",
     "browsers": {

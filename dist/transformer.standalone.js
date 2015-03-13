@@ -92,12 +92,12 @@ transformtomatrix = (function() {
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
-			'matrixee',
+			'transformer',
 			['transform-to-matrix'],
 			factory
 		);
 	} else {
-		root.Matrixee = factory(
+		root.Transformer = factory(
 			root['transform-to-matrix']
 		);
 	}
@@ -122,7 +122,7 @@ var _getRad = function (string) {
 
 var _toString = Object.prototype.toString;
 
-var Matrixee = function Matrixee (data) {
+var Transformer = function Transformer (data) {
 	this.matrix = Utils.identity();
 	this.transformations = {
 		perspective : Utils.identity(),
@@ -140,7 +140,7 @@ var Matrixee = function Matrixee (data) {
 
 var _matrixRegex = /(.*matrix[\w]*\(| |\).*)/g;
 
-Matrixee.prototype = {
+Transformer.prototype = {
 	// set matrix in model
 	setMatrix: function (data) {
 		////DEV
@@ -162,23 +162,23 @@ Matrixee.prototype = {
 		////END DEV
 
 		if (data.length === 3) {
-			Matrixee.from3x3to4x4(data);
+			Transformer.from3x3to4x4(data);
 		}
 
-		this.matrix = Matrixee.merge(this.matrix, data);
+		this.matrix = Transformer.merge(this.matrix, data);
 
 		return this;
 	},
 
 	setMatrixFromCSS: function(str){
-		var matrix = Matrixee.getMatrixFromCSS(str);
+		var matrix = Transformer.getMatrixFromCSS(str);
 		this.setMatrix(matrix);
 		return this;
 	},
 
 	// apply transformations as defined in the model, and get back get calculated matrix
 	getMatrix: function() {
-		var matrix = Matrixee.clone(this.matrix),
+		var matrix = Transformer.clone(this.matrix),
 			t = this.transformations;
 
 		// perspective
@@ -399,7 +399,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		Matrixee.merge(
+		Transformer.merge(
 			this.transformations.translate,
 			transformToMatrix.translate3d(x, y, z)
 		);
@@ -493,9 +493,9 @@ var Utils = {
 	}
 };
 
-Matrixee.Utils = Utils;
+Transformer.Utils = Utils;
 
-Matrixee.clone = function(matrix){
+Transformer.clone = function(matrix){
 	var newMatrix = [],
 		r, c;
 
@@ -509,7 +509,7 @@ Matrixee.clone = function(matrix){
 	return newMatrix;
 };
 
-Matrixee.merge = function(base, toMerge){
+Transformer.merge = function(base, toMerge){
 	var r, c;
 
 	for (r = 0; r < base.length; r++) {
@@ -521,7 +521,7 @@ Matrixee.merge = function(base, toMerge){
 	return base;
 };
 
-Matrixee.from3x3to4x4 = function(matrix){
+Transformer.from3x3to4x4 = function(matrix){
 	matrix[0].push(0);
 	matrix[1].push(0);
 	matrix[2].push(0);
@@ -529,7 +529,7 @@ Matrixee.from3x3to4x4 = function(matrix){
 	return matrix;
 };
 
-Matrixee.getMatrixFromCSS = function(str){
+Transformer.getMatrixFromCSS = function(str){
 	var values, matrix, i, ii;
 
 	if (str === 'none' || !str) {
@@ -565,6 +565,6 @@ Matrixee.getMatrixFromCSS = function(str){
 	return matrix;
 };
 
-return Matrixee;
+return Transformer;
 
 });
