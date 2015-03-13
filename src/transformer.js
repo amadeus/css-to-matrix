@@ -36,14 +36,7 @@ var _getRad = function (string) {
 var _toString = Object.prototype.toString;
 
 var Transformer = function Transformer (data) {
-	this.matrix = Utils.identity();
-	this.transformations = {
-		perspective : Utils.identity(),
-		rotate      : Utils.identity(),
-		scale       : Utils.identity(),
-		skew        : Utils.identity(),
-		translate   : Utils.identity()
-	};
+	this.matrix = Transformer.identity();
 
 	// set data?
 	if (data) {
@@ -90,32 +83,14 @@ Transformer.prototype = {
 	},
 
 	// apply transformations as defined in the model, and get back get calculated matrix
-	getMatrix: function() {
-		var matrix = Transformer.clone(this.matrix),
-			t = this.transformations;
-
-		// perspective
-		matrix = Utils.multiply(matrix, t.perspective);
-
-		// translate
-		matrix = Utils.multiply(matrix, t.translate);
-
-		// rotate
-		matrix = Utils.multiply(matrix, t.rotate);
-
-		// skew
-		matrix = Utils.multiply(matrix, t.skew);
-
-		// scale
-		matrix = Utils.multiply(matrix, t.scale);
-
-		return matrix;
+	getMatrixCopy: function() {
+		return Transformer.clone(this.matrix);
 	},
 
 	// get matrix formatted as a string that can be plugged right into CSS's `transform` function
 	getMatrixCSS: function() {
 		return 'matrix3d(' +
-			Utils.flip(this.getMatrix()).reduce(function (flat, row) {
+			Transformer.flip(this.getMatrixCopy()).reduce(function (flat, row) {
 				flat.push.apply(flat, row);
 				return flat;
 			}, []).join(',') + ')';
@@ -190,8 +165,8 @@ Transformer.prototype = {
 		}
 		////END DEV
 
-		this.transformations.perspective = Utils.multiply(
-			this.transformations.perspective,
+		Transformer.multiply(
+			this.matrix,
 			transformToMatrix.perspective(x)
 		);
 
@@ -224,8 +199,8 @@ Transformer.prototype = {
 		}
 		////END DEV
 
-		this.transformations.rotate = Utils.multiply(
-			this.transformations.rotate,
+		Transformer.multiply(
+			this.matrix,
 			transformToMatrix.rotate3d(
 				x,
 				y,
@@ -260,8 +235,8 @@ Transformer.prototype = {
 		}
 		////END DEV
 
-		 this.transformations.scale = Utils.multiply(
-			this.transformations.scale,
+		Transformer.multiply(
+			this.matrix,
 			transformToMatrix.scale3d(x, y, z)
 		);
 
@@ -276,9 +251,9 @@ Transformer.prototype = {
 			y = 0;
 		}
 
-		this.transformations.skew = Utils.multiply(
-			this.transformations.skew,
-			Utils.to3d(
+		Transformer.multiply(
+			this.matrix,
+			Transformer.to3d(
 				transformToMatrix.skew(
 					_getRad(x),
 					_getRad(y)
@@ -312,8 +287,8 @@ Transformer.prototype = {
 		}
 		////END DEV
 
-		Transformer.merge(
-			this.transformations.translate,
+		Transformer.multiply(
+			this.matrix,
 			transformToMatrix.translate3d(x, y, z)
 		);
 
@@ -321,92 +296,6 @@ Transformer.prototype = {
 	}
 
 };
-
-// Ported from https://github.com/eighttrackmind/matrix-utilities
-var Utils = {
-
-	// Based on matrix-utilities library, simplified and
-	// ported to modify the original and create less garbage
-	multiply: function(base, toMultiply) {
-		var r, c, l, result, row, size, sum;
-		if (base[0].length !== toMultiply.length) {
-			throw new Error('Matrix 1\'s row count should equal matrix 2\'s column count');
-		}
-		result = [];
-		size = toMultiply.length;
-		for (r = 0; r < size; r++) {
-			row = toMultiply[r];
-			for (c = 0; c < row.length; c++) {
-				l = size;
-				sum = 0;
-				while (l--) {
-					sum += base[r][l] * toMultiply[l][c];
-				}
-				result.push(sum);
-			}
-		}
-		row = undefined;
-
-		l = 0;
-		for (r = 0; r < base.length; r++) {
-			for (c = 0; c < base[r].length; c++) {
-				base[r][c] = result[l];
-				l++;
-			}
-		}
-		result.length = 0;
-
-		return base;
-	},
-
-	flip: function(matrix) {
-		var r, c, result, row, value, len;
-		result = [];
-		len = matrix.length;
-
-		for (r = 0; r < len; r++) {
-			row = matrix[r];
-			for (c = 0; c < len; c++) {
-				value = row[c];
-				(result[c] || (result[c] = []))[r] = value;
-			}
-		}
-
-		return result;
-	},
-
-	to2d: function(matrix) {
-		return [[matrix[0][0] || 1, matrix[0][1] || 0, matrix[0][3] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, matrix[1][3] || 0]];
-	},
-
-	to3d: function(matrix) {
-		return [[matrix[0][0] || 1, matrix[0][1] || 0, 0, matrix[0][2] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, 0, matrix[1][2] || 0], [0, 0, 1, 0], [0, 0, 0, 1]];
-	},
-
-	// If a matrix is provided, reset all values to an identity matrix
-	// Otherise create a new one
-	identity: function(matrix) {
-		var r, c;
-
-		if (!matrix) {
-			return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
-		}
-
-		for (r = 0; r < matrix.length; r++) {
-			for (c = 0; c < matrix[r].length; c++) {
-				if (r === c) {
-					matrix[r][c] = 1;
-				} else {
-					matrix[r][c] = 0;
-				}
-			}
-		}
-
-		return matrix;
-	}
-};
-
-Transformer.Utils = Utils;
 
 Transformer.clone = function(matrix){
 	var newMatrix = [],
@@ -446,7 +335,7 @@ Transformer.getMatrixFromCSS = function(str){
 	var values, matrix, i, ii;
 
 	if (str === 'none' || !str) {
-		return Utils.identity();
+		return Transformer.identity();
 	}
 
 	str = str.replace(_matrixRegex, '');
@@ -473,7 +362,92 @@ Transformer.getMatrixFromCSS = function(str){
 		}
 	}
 
-	matrix = Utils.flip(matrix);
+	matrix = Transformer.flip(matrix);
+
+	return matrix;
+};
+
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+// Based on matrix-utilities library, simplified and
+// ported to modify the original and create less garbage
+Transformer.multiply = function(base, toMultiply) {
+	var r, c, l, result, row, size, sum;
+	if (base[0].length !== toMultiply.length) {
+		throw new Error('Matrix 1\'s row count should equal matrix 2\'s column count');
+	}
+	result = [];
+	size = toMultiply.length;
+	for (r = 0; r < size; r++) {
+		row = toMultiply[r];
+		for (c = 0; c < row.length; c++) {
+			l = size;
+			sum = 0;
+			while (l--) {
+				sum += base[r][l] * toMultiply[l][c];
+			}
+			result.push(sum);
+		}
+	}
+	row = undefined;
+
+	l = 0;
+	for (r = 0; r < base.length; r++) {
+		for (c = 0; c < base[r].length; c++) {
+			base[r][c] = result[l];
+			l++;
+		}
+	}
+	result.length = 0;
+
+	return base;
+};
+
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+Transformer.flip = function(matrix) {
+	var r, c, result, row, value, len;
+	result = [];
+	len = matrix.length;
+
+	for (r = 0; r < len; r++) {
+		row = matrix[r];
+		for (c = 0; c < len; c++) {
+			value = row[c];
+			(result[c] || (result[c] = []))[r] = value;
+		}
+	}
+
+	return result;
+};
+
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+Transformer.to2d = function(matrix){
+	return [[matrix[0][0] || 1, matrix[0][1] || 0, matrix[0][3] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, matrix[1][3] || 0]];
+};
+
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+Transformer.to3d = function(matrix) {
+	return [[matrix[0][0] || 1, matrix[0][1] || 0, 0, matrix[0][2] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, 0, matrix[1][2] || 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+};
+
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+// If a matrix is provided, reset all values to an identity matrix
+// Otherise create a new one
+Transformer.identity = function(matrix){
+	var r, c;
+
+	if (!matrix) {
+		return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+	}
+
+	for (r = 0; r < matrix.length; r++) {
+		for (c = 0; c < matrix[r].length; c++) {
+			if (r === c) {
+				matrix[r][c] = 1;
+			} else {
+				matrix[r][c] = 0;
+			}
+		}
+	}
 
 	return matrix;
 };

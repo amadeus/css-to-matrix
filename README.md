@@ -1,63 +1,52 @@
 # Transformer
 
-A little library for converting compound CSS transforms into their matrix equivalents.
+A library for working with CSS transforms/matrices in JS
 
-## usage
+## Usage
 
-```coffee
+```js
+// using the default matrix
+var transform = new Transformer();
 
-# using the default matrix
-new Transformer
-
-# or using a custom 4x4 matrix (meaning some transformations are already applied)
-matrix = [
-	[1, 2, 3, 4]
-	[5, 6, 7, 8]
-	[9, 0, 1, 2]
-	[3, 4, 5, 6]
-]
-new Transformer matrix
-
+// or using a custom 4x4 matrix (meaning some transformations are already applied)
+var matrix = [
+    [1, 2, 3, 4]
+    [5, 6, 7, 8]
+    [9, 0, 1, 2]
+    [3, 4, 5, 6]
+];
+var transform = new Transformer(matrix);
 ```
 
-## example
+## Example
 
-```coffee
-transformer = new Transformer
+```js
+var transformer = new Transformer()
 
+// set some transforms
 transformer
+    .rotate('90deg')
+    .translate3d(50, 100, 200);
 
-# set some transforms
-.rotate '90deg'
-.translate3d 50, 100, 200
+// get a matrix copy
+var computedMatrix = transformer.getMatrixCopy();
 
-# get a matrix back
-.getMatrix()
-
-
-#=> [
-#		[9.870993963020204, 0.7, 0, 0],
-#		[-0.5, 0, 0, 0],
-#		[0, 0, 1, 0],
-#		[443.54969815101026, 35, 200, 1]
-#	]
-
-# .. or as a CSS property
-transformer.getMatrixCSS()
-
-#=> "matrix3d(9.870993963020204, 0.7, 0, 0, -0.5, 0, 0, 0, 0, 0, 1, 0, 443.54969815101026, 35, 200, 1)"
-
-# set a new base matrix (on the basis of which transforms are applied)
-transformer.matrix [
-	[3, 1, 4, 1]
-	[5, 9, 2, 6]
-	[5, 3, 5, 8]
-	[9, 7, 9, 3]
+// Returns =>
+[
+    [6.123233995736766e-17, -1, 0, -100],
+    [1,6.123233995736766e-17,0,50.00000000000001],
+    [0,0,1,200],
+    [0,0,0,1]
 ]
 
+
+// As CSS property
+transformer.getMatrixCSS()
+// returns =>
+'matrix3d(9.870993963020204, 0.7, 0, 0, -0.5, 0, 0, 0, 0, 0, 1, 0, 443.54969815101026, 35, 200, 1)'
 ```
 
-## supported transforms
+## Supported transforms
 
 - perspective
 - rotate
@@ -79,11 +68,8 @@ transformer.matrix [
 - translateZ
 - translate3d
 
-## why not use actual matricies?
 
-If you're performing caculations dozens of times per second (in the case of animations. 60 times per second), performance is essential. Not only do we need to be able to perform calculations for complex compound 3D transforms at 60FPS, but we need to leave head room for any precursor computations, as well as compositing and painting. Performing the calculations ourselves (instead of leaving it to the CSS engine) gives us finer control over where (CPU vs. GPU, this thread vs. a WebWorker, sync vs. async) and when (precomputed, partially applied, realtime) computation occurs.
-
-## see also
+## See also
 
 - http://www.w3.org/TR/css3-transforms/#transform-functions
 - http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined
@@ -93,20 +79,17 @@ If you're performing caculations dozens of times per second (in the case of anim
 - http://stackoverflow.com/a/15208858/435124
 - http://desandro.github.io/3dtransforms/docs/perspective.html
 
-## todo
-
-- accept alternative units for scalars (%, em, pt, etc.)
-
-## running the tests
+## Running the tests
 
 ```bash
 npm i
 grunt test
+open test/index.html
 ```
 
 then, open test/index.html in a browser
 
-## license
+## License
 
 MIT
 

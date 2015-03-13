@@ -38,7 +38,7 @@ setup
 				[6, 7, 8]
 			]
 			transformer = new Transformer data2
-			actual  = transformer.getMatrix()
+			actual  = transformer.getMatrixCopy()
 			expected = [
 				[0, 1, 2, 0],
 				[3, 4, 5, 0],
@@ -47,12 +47,12 @@ setup
 			]
 			expect(actual).to.deep.equal expected
 
-	describe 'getMatrix', ->
+	describe 'getMatrixCopy', ->
 
 		it 'properly apply transformations', ->
 			transformer = new Transformer
 			transformer.translate3d 10, 20, 30
-			actual = transformer.getMatrix()
+			actual = transformer.getMatrixCopy()
 			expected = [
 				[1, 0, 0, 10]
 				[0, 1, 0, 20]
@@ -75,7 +75,7 @@ setup
 		it 'set a 4x4 matrix from a matrix3d css string', ->
 			transformer = new Transformer
 			transformer.setMatrixFromCSS 'matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)'
-			actual = transformer.getMatrix()
+			actual = transformer.getMatrixCopy()
 			expected = [
 				[0, 4, 8,  12],
 				[1, 5, 9,  13],
@@ -94,7 +94,7 @@ setup
 		it 'set a 4x4 matrix from a matrix 2d css string', ->
 			transformer = new Transformer
 			transformer.setMatrixFromCSS 'matrix(0, 1, 2, 3, 4, 5)'
-			actual = transformer.getMatrix()
+			actual = transformer.getMatrixCopy()
 			expected = [
 				[0, 2, 4, 0],
 				[1, 3, 5, 0],
@@ -106,7 +106,7 @@ setup
 		it 'create an identity matrix with a none value', ->
 			transformer = new Transformer
 			transformer.setMatrixFromCSS('none')
-			actual = transformer.getMatrix()
+			actual = transformer.getMatrixCopy()
 			expected = [
 				[1, 0, 0, 0],
 				[0, 1, 0, 0],
@@ -118,7 +118,7 @@ setup
 		it 'create an identity matrix from an empty string', ->
 			transformer = new Transformer
 			transformer.setMatrixFromCSS()
-			actual = transformer.getMatrix()
+			actual = transformer.getMatrixCopy()
 			expected = [
 				[1, 0, 0, 0],
 				[0, 1, 0, 0],

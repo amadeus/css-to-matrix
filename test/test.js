@@ -37,18 +37,18 @@
       var actual, data2, expected, transformer;
       data2 = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
       transformer = new Transformer(data2);
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[0, 1, 2, 0], [3, 4, 5, 0], [6, 7, 8, 0], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
   });
 
-  describe('getMatrix', function() {
+  describe('getMatrixCopy', function() {
     return it('properly apply transformations', function() {
       var actual, expected, transformer;
       transformer = new Transformer;
       transformer.translate3d(10, 20, 30);
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[1, 0, 0, 10], [0, 1, 0, 20], [0, 0, 1, 30], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
@@ -68,7 +68,7 @@
       var actual, expected, transformer;
       transformer = new Transformer;
       transformer.setMatrixFromCSS('matrix3d(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)');
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[0, 4, 8, 12], [1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15]];
       return expect(actual).to.deep.equal(expected);
     });
@@ -84,7 +84,7 @@
       var actual, expected, transformer;
       transformer = new Transformer;
       transformer.setMatrixFromCSS('matrix(0, 1, 2, 3, 4, 5)');
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[0, 2, 4, 0], [1, 3, 5, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
@@ -92,7 +92,7 @@
       var actual, expected, transformer;
       transformer = new Transformer;
       transformer.setMatrixFromCSS('none');
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
@@ -100,7 +100,7 @@
       var actual, expected, transformer;
       transformer = new Transformer;
       transformer.setMatrixFromCSS();
-      actual = transformer.getMatrix();
+      actual = transformer.getMatrixCopy();
       expected = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
       return expect(actual).to.deep.equal(expected);
     });
