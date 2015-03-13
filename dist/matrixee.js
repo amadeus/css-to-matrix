@@ -1,25 +1,20 @@
 (function(root, factory) {
 	if (typeof exports === 'object') {
 		module.exports = factory(
-		  require('transform-to-matrix'),
-		  require('matrix-utilities')
+		  require('transform-to-matrix')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
 			'matrixee',
-			[
-				'transform-to-matrix',
-				'matrix-utilities'
-			],
+			['transform-to-matrix'],
 			factory
 		);
 	} else {
 		root.Matrixee = factory(
-			root['transform-to-matrix'],
-			root['matrix-utilities']
+			root['transform-to-matrix']
 		);
 	}
-})(this, function(transformToMatrix, Utilities) {
+})(this, function(transformToMatrix) {
 
 // convert strings like "55deg" or ".75rad" to floats (in radians)
 var _getRad = function (string) {
@@ -41,13 +36,13 @@ var _getRad = function (string) {
 var _toString = Object.prototype.toString;
 
 var Matrixee = function Matrixee (data) {
-	this.matrix = new Utilities.Identity();
+	this.matrix = Utils.identity();
 	this.transformations = {
-		perspective : new Utilities.Identity(),
-		rotate      : new Utilities.Identity(),
-		scale       : new Utilities.Identity(),
-		skew        : new Utilities.Identity(),
-		translate   : new Utilities.Identity()
+		perspective : Utils.identity(),
+		rotate      : Utils.identity(),
+		scale       : Utils.identity(),
+		skew        : Utils.identity(),
+		translate   : Utils.identity()
 	};
 
 	// set data?
@@ -100,19 +95,19 @@ Matrixee.prototype = {
 			t = this.transformations;
 
 		// perspective
-		matrix = Utilities.multiply(matrix, t.perspective);
+		matrix = Utils.multiply(matrix, t.perspective);
 
 		// translate
-		matrix = Utilities.multiply(matrix, t.translate);
+		matrix = Utils.multiply(matrix, t.translate);
 
 		// rotate
-		matrix = Utilities.multiply(matrix, t.rotate);
+		matrix = Utils.multiply(matrix, t.rotate);
 
 		// skew
-		matrix = Utilities.multiply(matrix, t.skew);
+		matrix = Utils.multiply(matrix, t.skew);
 
 		// scale
-		matrix = Utilities.multiply(matrix, t.scale);
+		matrix = Utils.multiply(matrix, t.scale);
 
 		return matrix;
 	},
@@ -120,7 +115,7 @@ Matrixee.prototype = {
 	// get matrix formatted as a string that can be plugged right into CSS's `transform` function
 	getMatrixCSS: function() {
 		return 'matrix3d(' +
-			Utilities.flip(this.getMatrix()).reduce(function (flat, row) {
+			Utils.flip(this.getMatrix()).reduce(function (flat, row) {
 				flat.push.apply(flat, row);
 				return flat;
 			}, []).join(',') + ')';
@@ -195,7 +190,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.transformations.perspective = Utilities.multiply(
+		this.transformations.perspective = Utils.multiply(
 			this.transformations.perspective,
 			transformToMatrix.perspective(x)
 		);
@@ -229,7 +224,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.transformations.rotate = Utilities.multiply(
+		this.transformations.rotate = Utils.multiply(
 			this.transformations.rotate,
 			transformToMatrix.rotate3d(
 				x,
@@ -265,7 +260,7 @@ Matrixee.prototype = {
 		}
 		////END DEV
 
-		this.transformations.scale = Utilities.multiply(
+		 this.transformations.scale = Utils.multiply(
 			this.transformations.scale,
 			transformToMatrix.scale3d(x, y, z)
 		);
@@ -281,9 +276,9 @@ Matrixee.prototype = {
 			y = 0;
 		}
 
-		this.transformations.skew = Utilities.multiply(
+		this.transformations.skew = Utils.multiply(
 			this.transformations.skew,
-			Utilities.to3d(
+			Utils.to3d(
 				transformToMatrix.skew(
 					_getRad(x),
 					_getRad(y)
@@ -327,6 +322,89 @@ Matrixee.prototype = {
 
 };
 
+// Ported from https://github.com/eighttrackmind/matrix-utilities
+var Utils = {
+
+	// Based on matrix-utilities library, simplified and
+	// ported to modify the original and create less garbage
+	multiply: function(base, toMultiply) {
+		var r, c, l, result, row, size, sum;
+		if (base[0].length !== toMultiply.length) {
+			throw new Error('Matrix 1\'s row count should equal matrix 2\'s column count');
+		}
+		result = [];
+		size = toMultiply.length;
+		for (r = 0; r < size; r++) {
+			row = toMultiply[r];
+			for (c = 0; c < row.length; c++) {
+				l = size;
+				sum = 0;
+				while (l--) {
+					sum += base[r][l] * toMultiply[l][c];
+				}
+				result.push(sum);
+			}
+		}
+		row = undefined;
+
+		l = 0;
+		for (r = 0; r < base.length; r++) {
+			for (c = 0; c < base[r].length; c++) {
+				base[r][c] = result[l];
+				l++;
+			}
+		}
+		result.length = 0;
+
+		return base;
+	},
+
+	flip: function(matrix) {
+		var j, k, result, row, value, _i, _j, _len, _len1;
+		result = [];
+		for (j = _i = 0, _len = matrix.length; _i < _len; j = ++_i) {
+			row = matrix[j];
+			for (k = _j = 0, _len1 = row.length; _j < _len1; k = ++_j) {
+				value = row[k];
+				(result[k] || (result[k] = []))[j] = value;
+			}
+		}
+		return result;
+	},
+
+	to2d: function(matrix) {
+		return [[matrix[0][0] || 1, matrix[0][1] || 0, matrix[0][3] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, matrix[1][3] || 0]];
+	},
+
+	to3d: function(matrix) {
+		return [[matrix[0][0] || 1, matrix[0][1] || 0, 0, matrix[0][2] || 0], [matrix[1][0] || 0, matrix[1][1] || 1, 0, matrix[1][2] || 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+	},
+
+	// If a matrix is provided, reset all values to an identity matrix
+	// Otherise create a new one
+	identity: function(matrix) {
+		var r, c;
+
+		if (!matrix) {
+			return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+		}
+
+		for (r = 0; r < matrix.length; r++) {
+			for (c = 0; c < matrix[r].length; c++) {
+				if (r === c) {
+					matrix[r][c] = 1;
+				} else {
+					matrix[r][c] = 0;
+				}
+			}
+		}
+
+		return matrix;
+	}
+};
+
+Matrixee.Utils = Utils;
+
 Matrixee.clone = function(matrix){
 	var newMatrix = [],
 		r, c;
@@ -365,7 +443,7 @@ Matrixee.getMatrixFromCSS = function(str){
 	var values, matrix, i, ii;
 
 	if (str === 'none' || !str) {
-		return new Utilities.Identity();
+		return Utils.identity();
 	}
 
 	str = str.replace(_matrixRegex, '');
@@ -392,7 +470,7 @@ Matrixee.getMatrixFromCSS = function(str){
 		}
 	}
 
-	matrix = Utilities.flip(matrix);
+	matrix = Utils.flip(matrix);
 
 	return matrix;
 };

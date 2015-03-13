@@ -53,7 +53,6 @@ grunt.config.init({
 		},
 		standalone: {
 			src: [
-				'node_modules/matrix-utilities/matrix-utilities.js',
 				'node_modules/transform-to-matrix/transform-to-matrix.js',
 				'dist/<%= pkg.name %>.js'
 			],
