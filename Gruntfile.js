@@ -37,6 +37,7 @@ grunt.config.init({
 				unused: true,
 				join_vars: true
 			},
+			report: 'min',
 			comments: false
 		},
 		standard: {
@@ -53,11 +54,13 @@ grunt.config.init({
 	},
 	'regex-replace': {
 		min: {
-			src: ['dist/<%= pkg.name %>.min.js'],
+			src: ['dist/<%= pkg.name %>.js'],
 			actions: [
 				{
 					name: 'remove debug checks',
 					search: '////DEV(.+)////END DEV',
+					// search: /\/\/\/\/DEV[.\s\S]*\/\/\/\/END DEV/g,
+					// search: /\/\/\/\/DEV[.\S\s]+\/\/\/\/ENDDEV/,
 					replace: '',
 					flags: 'gim'
 				}
