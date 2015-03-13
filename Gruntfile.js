@@ -33,9 +33,13 @@ grunt.config.init({
 				toplevel: true
 			},
 			compress: {
-				dead_code: true,
-				unused: true,
-				join_vars: true
+				sequences : true,
+				dead_code : true,
+				unused    : true,
+				join_vars : true,
+				unsafe    : true,
+				loops     : true,
+				booleans  : true
 			},
 			report: 'min',
 			comments: false
