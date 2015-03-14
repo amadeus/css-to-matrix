@@ -295,6 +295,64 @@ Transformer.prototype = {
 
 };
 
+Transformer.tween = function(from, to, timing, delta, duration){
+	var result, r, c, matrix;
+
+	if (from instanceof Transformer) {
+		from = from.matrix;
+	}
+	if (to instanceof Transformer) {
+		to = to.matrix;
+	}
+
+	////DEBUG-START
+	// Validate all the arguments
+	if (_toString.call(from) !== '[object Array]') {
+		throw new TypeError('expected `from` argument to be an array, is: ' + from);
+	}
+
+	if (_toString.call(to) !== '[object Array]') {
+		throw new TypeError('expected `to` argument to be an array, is: ' + to);
+	}
+
+	if (typeof timing !== 'function') {
+		throw new TypeError('expected `timing` argument to be a function, is: ' + timing);
+	}
+
+	if (typeof delta !== 'number' || isNaN(delta)) {
+		throw new TypeError('delta is not a number: ' + delta);
+	}
+
+	if (typeof duration !== 'number' || isNaN(duration)) {
+		throw new TypeError('duration is not a number: ' + delta);
+	}
+
+	if (from.length !== 4 || from[0].length !== 4) {
+		throw new Error('`from` argument must be a 4x4 array/matrix');
+	}
+
+	if (to.length !== 4 || to[0].length !== 4) {
+		throw new Error('`from` argument must be a 4x4 array/matrix');
+	}
+	////DEBUG-END
+
+	result = new Transformer();
+	matrix = result.matrix;
+
+	for (r = 0; r < from.length; r++) {
+		for (c = 0; c < to.length; c++) {
+			matrix[r][c] = timing(
+				delta,
+				from[r][c],
+				to[r][c] - from[r][c],
+				duration
+			);
+		}
+	}
+
+	return result;
+};
+
 Transformer.clone = function(matrix){
 	var newMatrix = [],
 		r, c;

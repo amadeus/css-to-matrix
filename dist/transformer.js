@@ -231,6 +231,33 @@ Transformer.prototype = {
 
 };
 
+Transformer.tween = function(from, to, timing, delta, duration){
+	var result, r, c, matrix;
+
+	if (from instanceof Transformer) {
+		from = from.matrix;
+	}
+	if (to instanceof Transformer) {
+		to = to.matrix;
+	}
+
+	result = new Transformer();
+	matrix = result.matrix;
+
+	for (r = 0; r < from.length; r++) {
+		for (c = 0; c < to.length; c++) {
+			matrix[r][c] = timing(
+				delta,
+				from[r][c],
+				to[r][c] - from[r][c],
+				duration
+			);
+		}
+	}
+
+	return result;
+};
+
 Transformer.clone = function(matrix){
 	var newMatrix = [],
 		r, c;
