@@ -29,8 +29,6 @@ var _getRad = function (string) {
 	return string;
 };
 
-var _toString = Object.prototype.toString;
-
 var Transformer = function Transformer (data) {
 	this.matrix = Transformer.identity();
 

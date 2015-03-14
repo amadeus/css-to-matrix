@@ -29,7 +29,9 @@ var _getRad = function (string) {
 	return string;
 };
 
+////DEBUG-START
 var _toString = Object.prototype.toString;
+////DEBUG-END
 
 var Transformer = function Transformer (data) {
 	this.matrix = Transformer.identity();
@@ -45,7 +47,7 @@ var _matrixRegex = /(.*matrix[\w]*\(| |\).*)/g;
 Transformer.prototype = {
 	// set matrix in model
 	setMatrix: function (data) {
-		////DEV
+		////DEBUG-START
 		if (_toString.call(data) !== '[object Array]') {
 			throw new TypeError('expected parameter `data` to be an Array, but was given a ' + _toString.call(data));
 		}
@@ -61,7 +63,7 @@ Transformer.prototype = {
 		if (data.length > 4 || data.length < 3) {
 			throw new Error('must be a 3x3 or 4x4 matrix, was ' + data.length + 'x' + data[0].length);
 		}
-		////ENDDEV
+		////DEBUG-END
 
 		if (data.length === 3) {
 			Transformer.from3x3to4x4(data);
@@ -155,11 +157,11 @@ Transformer.prototype = {
 			x = 0;
 		}
 
-		////DEV
+		////DEBUG-START
 		if (typeof x !== 'number') {
 			throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
 		}
-		////ENDDEV
+		////DEBUG-END
 
 		Transformer.multiply(
 			this.matrix,
@@ -183,7 +185,7 @@ Transformer.prototype = {
 			a = 0;
 		}
 
-		////DEV
+		////DEBUG-START
 		if (typeof x !== 'number') {
 			throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
 		}
@@ -193,7 +195,7 @@ Transformer.prototype = {
 		if (typeof z !== 'number') {
 			throw new TypeError('expected parameter `z` to be a Number, but was given a ' + typeof z);
 		}
-		////ENDDEV
+		////DEBUG-END
 
 		Transformer.multiply(
 			this.matrix,
@@ -219,7 +221,7 @@ Transformer.prototype = {
 			z = 1;
 		}
 
-		////DEV
+		////DEBUG-START
 		if (typeof x !== 'number') {
 			throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
 		}
@@ -229,7 +231,7 @@ Transformer.prototype = {
 		if (typeof z !== 'number') {
 			throw new TypeError('expected parameter `z` to be a Number, but was given a ' + typeof z);
 		}
-		////ENDDEV
+		////DEBUG-END
 
 		Transformer.multiply(
 			this.matrix,
@@ -271,7 +273,7 @@ Transformer.prototype = {
 			z = 0;
 		}
 
-		////DEV
+		////DEBUG-START
 		if (typeof x !== 'number') {
 			throw new TypeError('expected parameter `x` to be a Number, but was given a ' + typeof x);
 		}
@@ -281,7 +283,7 @@ Transformer.prototype = {
 		if (typeof z !== 'number') {
 			throw new TypeError('expected parameter `z` to be a Number, but was given a ' + typeof z);
 		}
-		////ENDDEV
+		////DEBUG-END
 
 		Transformer.multiply(
 			this.matrix,
@@ -337,11 +339,11 @@ Transformer.getMatrixFromCSS = function(str){
 	str = str.replace(_matrixRegex, '');
 	values = str.split(',');
 
-	////DEV
+	////DEBUG-START
 	if (values.length !== 6 && values.length !== 16) {
 		throw new TypeError('invalid array parsed from string: ' + str);
 	}
-	////ENDDEV
+	////DEBUG-END
 
 	if (values.length === 6) {
 		values.splice(2, 0, 0, 0);
@@ -368,11 +370,11 @@ Transformer.getMatrixFromCSS = function(str){
 // ported to modify the original and create less garbage
 Transformer.multiply = function(base, toMultiply) {
 	var r, c, l, result, row, size, sum;
-	////DEV
+	////DEBUG-START
 	if (base[0].length !== toMultiply.length) {
 		throw new Error('Matrix 1\'s row count should equal matrix 2\'s column count');
 	}
-	////ENDDEV
+	////DEBUG-END
 	result = [];
 	size = toMultiply.length;
 	for (r = 0; r < size; r++) {

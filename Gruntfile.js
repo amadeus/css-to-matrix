@@ -66,7 +66,7 @@ grunt.config.init({
 			actions: [
 				{
 					name: 'remove debug checks',
-					search: /\/\/\/\/DEV[.\S\s]+?\/\/\/\/ENDDEV[\s]*/g,
+					search: /\/\/\/\/DEBUG-START[.\S\s]*?\/\/\/\/DEBUG-END[\s]*/g,
 					replace: ''
 				}
 			]
