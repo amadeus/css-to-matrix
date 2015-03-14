@@ -466,7 +466,12 @@ Transformer.identity = function(matrix){
 // Ported from https://github.com/eighttrackmind/transform-to-matrix
 var Compute = {
 	perspective: function(d) {
-		return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, -1 / d, 1]];
+		return [
+			[1, 0, 0, 0],
+			[0, 1, 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, -1 / d, 1]
+		];
 	},
 
 	rotate: function(a) {
@@ -485,7 +490,10 @@ var Compute = {
 		var c, n;
 		c = Math.cos(a);
 		n = Math.sin(a);
-		return [[c, -n, 0], [n, c, 0]];
+		return [
+			[c, -n, 0],
+			[n, c, 0]
+		];
 	},
 
 	rotate3d: function(x, y, z, a) {
@@ -504,7 +512,10 @@ var Compute = {
 	},
 
 	scale: function(x, y) {
-		return [[x, 0, 0], [0, y, 0]];
+		return [
+			[x, 0, 0],
+			[0, y, 0]
+		];
 	},
 
 	scaleX: function(x) {
@@ -520,23 +531,40 @@ var Compute = {
 	},
 
 	scale3d: function(x, y, z) {
-		return [[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]];
+		return [
+			[x, 0, 0, 0],
+			[0, y, 0, 0],
+			[0, 0, z, 0],
+			[0, 0, 0, 1]
+		];
 	},
 
 	skew: function(x, y) {
-		return [[1, Math.tan(x), 0], [Math.tan(y), 1, 0]];
+		return [
+			[1, Math.tan(x), 0],
+			[Math.tan(y), 1, 0]
+		];
 	},
 
 	skewX: function(x) {
-		return [[1, Math.tan(x), 0], [0, 1, 0]];
+		return [
+			[1, Math.tan(x), 0],
+			[0, 1, 0]
+		];
 	},
 
 	skewY: function(y) {
-		return [[1, 0, 0], [Math.tan(y), 1, 0]];
+		return [
+			[1, 0, 0],
+			[Math.tan(y), 1, 0]
+		];
 	},
 
 	translate: function(x, y) {
-		return [[1, 0, x], [0, 1, y]];
+		return [
+			[1, 0, x],
+			[0, 1, y]
+		];
 	},
 
 	translateX: function(x) {
@@ -552,7 +580,12 @@ var Compute = {
 	},
 
 	translate3d: function(x, y, z) {
-		return [[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]];
+		return [
+			[1, 0, 0, x],
+			[0, 1, 0, y],
+			[0, 0, 1, z],
+			[0, 0, 0, 1]
+		];
 	}
 };
 
