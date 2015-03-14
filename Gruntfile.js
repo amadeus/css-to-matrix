@@ -46,7 +46,7 @@ grunt.config.init({
 		},
 		standard: {
 			files: {
-				'dist/<%= pkg.name %>.min.js': ['src/<%= pkg.name %>.js']
+				'dist/<%= pkg.name %>.min.js': ['dist/<%= pkg.name %>.min.js']
 			}
 		}
 	},
@@ -54,19 +54,20 @@ grunt.config.init({
 		standard: {
 			src: 'src/<%= pkg.name %>.js',
 			dest: 'dist/<%= pkg.name %>.js'
+		},
+		min: {
+			src: 'src/<%= pkg.name %>.js',
+			dest: 'dist/<%= pkg.name %>.min.js'
 		}
 	},
 	'regex-replace': {
 		min: {
-			src: ['dist/<%= pkg.name %>.js'],
+			src: ['dist/<%= pkg.name %>.min.js'],
 			actions: [
 				{
 					name: 'remove debug checks',
-					search: '////DEV(.+)////END DEV',
-					// search: /\/\/\/\/DEV[.\s\S]*\/\/\/\/END DEV/g,
-					// search: /\/\/\/\/DEV[.\S\s]+\/\/\/\/ENDDEV/,
-					replace: '',
-					flags: 'gim'
+					search: /\/\/\/\/DEV[.\S\s]+?\/\/\/\/ENDDEV[\s]*/g,
+					replace: ''
 				}
 			]
 		}
