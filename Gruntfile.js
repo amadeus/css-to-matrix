@@ -80,6 +80,14 @@ grunt.config.init({
 				interrupt: true,
 				spawn: false
 			}
+		},
+		source: {
+			files: './src/*',
+			tasks: build,
+			options: {
+				interrupt: true,
+				spawn: false
+			}
 		}
 	}
 });
